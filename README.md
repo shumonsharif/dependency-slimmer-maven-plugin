@@ -50,7 +50,10 @@ To use the plugin, add it to the `build` section of your `pom.xml`.
 - `verbose` (boolean, default: `false`): Enable detailed logging.
 - `dryRun` (boolean, default: `false`): If true, the plugin will only log what it would remove.
 - `profile` (String): Use a predefined configuration profile.
-- `configuration` (SlimmingConfiguration): The main configuration block for includes and excludes.
+- `includes` (List<DependencyFilter>): A list of dependencies to include. If provided, all other dependencies will be excluded.
+- `excludes` (List<DependencyFilter>): A list of dependencies to exclude from the final artifact.
+- `preserveManifest` (boolean, default: `true`): Whether to keep the original `META-INF/MANIFEST.MF` file.
+- `removeEmptyDirectories` (boolean, default: `true`): Whether to remove empty directories after slimming.
 
 ### Excluding Dependencies
 
@@ -88,6 +91,29 @@ To specify which dependencies to keep, use an `<includes>` block. All other depe
             <artifactId>langchain4j-ollama</artifactId>
         </include>
     </includes>
+</configuration>
+```
+
+### Mixed Mode (Includes and Excludes)
+
+You can also combine `<includes>` and `<excludes>`. In this mode, inclusions take precedence. An artifact will be kept if it matches an include rule, even if it also matches an exclude rule.
+
+This is useful for scenarios where you want to exclude a broad group of dependencies but keep a specific one from that group.
+
+```xml
+<configuration>
+    <includes>
+        <include>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>google-cloud-storage</artifactId>
+        </include>
+    </includes>
+    <excludes>
+        <exclude>
+            <groupId>com.google.cloud</groupId>
+            <artifactId>*</artifactId>
+        </exclude>
+    </excludes>
 </configuration>
 ```
 

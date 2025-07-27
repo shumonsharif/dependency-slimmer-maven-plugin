@@ -14,6 +14,7 @@ import org.eclipse.aether.RepositorySystemSession;
 import org.eclipse.aether.repository.RemoteRepository;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -37,18 +38,27 @@ public class DependencySlimmerMojo extends AbstractMojo {
     private List<RemoteRepository> remoteRepositories;
 
     @Parameter
-    private SlimmingConfiguration configuration;
+    private List<DependencyFilter> includes = new ArrayList<>();
 
     @Parameter
+    private List<DependencyFilter> excludes = new ArrayList<>();
+
+    @Parameter(property = "slim.preserveManifest", defaultValue = "true")
+    private boolean preserveManifest;
+
+    @Parameter(property = "slim.removeEmptyDirectories", defaultValue = "true")
+    private boolean removeEmptyDirectories;
+
+    @Parameter(property = "slim.profile")
     private String profile;
 
-    @Parameter(defaultValue = "true")
+    @Parameter(property = "slim.enabled", defaultValue = "true")
     private boolean enabled;
 
-    @Parameter(defaultValue = "false")
+    @Parameter(property = "slim.verbose", defaultValue = "false")
     private boolean verbose;
 
-    @Parameter(defaultValue = "false")
+    @Parameter(property = "slim.dryRun", defaultValue = "false")
     private boolean dryRun;
 
     @Override
@@ -104,11 +114,11 @@ public class DependencySlimmerMojo extends AbstractMojo {
     }
 
     private SlimmingConfiguration initializeConfiguration() throws MojoExecutionException {
-        SlimmingConfiguration config = this.configuration;
-        
-        if (config == null) {
-            config = new SlimmingConfiguration();
-        }
+        SlimmingConfiguration config = new SlimmingConfiguration();
+        config.setIncludes(includes);
+        config.setExcludes(excludes);
+        config.setPreserveManifest(preserveManifest);
+        config.setRemoveEmptyDirectories(removeEmptyDirectories);
 
         // Apply predefined profile if specified
         if (profile != null && !profile.trim().isEmpty()) {
