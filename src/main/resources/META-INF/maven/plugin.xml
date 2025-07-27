@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin>
+  <name>Mule Dependency Slimmer Maven Plugin</name>
+  <description>A Maven plugin to reduce Mule application size by filtering dependencies</description>
+  <goalPrefix>mule-dependency-slimmer</goalPrefix>
+  <isolatedRealm>false</isolatedRealm>
+  <inheritedByDefault>true</inheritedByDefault>
+  <mojo>
+    <goal>slim</goal>
+    <description>Slims down the project's dependencies.</description>
+    <implementation>com.mulesoft.tools.maven.DependencySlimmerMojo</implementation>
+    <language>java</language>
+    <phase>package</phase>
+    <threadSafe>false</threadSafe>
+    <requiresDependencyResolution>runtime</requiresDependencyResolution>
+    <parameters>
+      <parameter>
+        <name>enabled</name>
+        <type>boolean</type>
+        <required>false</required>
+        <editable>true</editable>
+        <description>Enable or disable the plugin execution.</description>
+        <defaultValue>true</defaultValue>
+      </parameter>
+      <parameter>
+        <name>verbose</name>
+        <type>boolean</type>
+        <required>false</required>
+        <editable>true</editable>
+        <description>Enable verbose logging.</description>
+        <defaultValue>false</defaultValue>
+      </parameter>
+      <parameter>
+        <name>dryRun</name>
+        <type>boolean</type>
+        <required>false</required>
+        <editable>true</editable>
+        <description>If true, the plugin will only analyze and log what would be removed, without modifying the artifact.</description>
+        <defaultValue>false</defaultValue>
+      </parameter>
+      <parameter>
+        <name>profile</name>
+        <type>java.lang.String</type>
+        <required>false</required>
+        <editable>true</editable>
+        <description>A predefined slimming profile to apply. Available profiles: ollama-only, openai-only, minimal.</description>
+      </parameter>
+      <parameter>
+        <name>configuration</name>
+        <type>com.mulesoft.tools.maven.config.SlimmingConfiguration</type>
+        <required>false</required>
+        <editable>true</editable>
+        <description>Custom configuration for including and excluding dependencies.</description>
+      </parameter>
+    </parameters>
+  </mojo>
+</plugin>
